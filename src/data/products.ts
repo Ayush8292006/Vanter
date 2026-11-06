@@ -44,8 +44,8 @@ export const PRODUCTS: Product[] = [
     isBestseller: true,
     isNew: false,
     images: {
-      primary: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1200&q=85',
-      secondary: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=85',
+      primary: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=85',
+      secondary: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1200&q=85',
       ingredients: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1200&q=85',
       lifestyle: 'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1200&q=85',
     },
@@ -229,7 +229,7 @@ export const PRODUCTS: Product[] = [
     isNew: true,
     images: {
       primary: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=85',
-      secondary: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1200&q=85',
+      secondary: 'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=1200&q=85',
       ingredients: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=85',
       lifestyle: 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1200&q=85',
     },
@@ -351,7 +351,7 @@ export const CRAFTSMANSHIP_STEPS = [
     title: 'Hand-Finishing & Sealing',
     subtitle: 'Numbered flacons in heavy crystal',
     description: 'Each flacon is cast from lead-free heavyweight French glass, crowned with a magnetic zinc alloy cap, and hand-inspected under raking light before being sealed with the gold VANTÉR wax stamp.',
-    image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1200&q=85',
+    image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1200&q=85',
   },
 ];
 
@@ -433,7 +433,7 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
 export const INSTAGRAM_POSTS = [
   {
     id: 'ig-1',
-    image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=85',
+    image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=85',
     caption: 'Gold leaf and black glass. The tactile weight of N°01.',
   },
   {

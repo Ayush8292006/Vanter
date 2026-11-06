@@ -26,7 +26,7 @@ export const MobileHomeFeed: React.FC = () => {
     {
       title: 'The Art of Invisible Elegance',
       subtitle: 'Composed in Grasse in limited numbered extraits',
-      image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=85',
+      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=85',
       cta: 'Explore Anthology',
       link: '/collection',
     },
