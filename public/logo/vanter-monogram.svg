@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8CE92" />
+      <stop offset="45%" stop-color="#C9A45C" />
+      <stop offset="70%" stop-color="#D7B66E" />
+      <stop offset="100%" stop-color="#9C7733" />
+    </linearGradient>
+  </defs>
+  <!-- Outer V with serifs and inner diamond/stem facets -->
+  <g fill="url(#goldGrad)">
+    <!-- Left outer wing -->
+    <polygon points="60,86 112,86 200,296 200,320 186,320 60,86" />
+    <!-- Right outer wing -->
+    <polygon points="340,86 288,86 200,296 200,320 214,320 340,86" />
+    <!-- Center top inverted triangle -->
+    <polygon points="138,86 262,86 200,192" />
+    <!-- Inner faceted vertical stem splitting the V -->
+    <polygon points="200,205 188,290 200,314 212,290" />
+  </g>
+</svg>
+

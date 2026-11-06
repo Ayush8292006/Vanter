@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ivory: #FAF8F3;
+  --white: #FFFFFF;
+  --beige: #EDE4D3;
+  --sand: #D8C9AE;
+  --taupe: #8C7F6E;
+  --black: #0B0B0B;
+  --charcoal: #1A1A1A;
+  --gold: #C9A45C;
+  --gold-light: #E3C88A;
+}
+
+@layer base {
+  html {
+    font-family: 'Jost', system-ui, -apple-system, sans-serif;
+    background-color: #0B0B0B;
+    color: #FAF8F3;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    overflow-x: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0B0B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #332B1E;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A45C;
+}
+
+/* Utilities */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Text Selection */
+::selection {
+  background-color: rgba(201, 164, 92, 0.35);
+  color: #FFFFFF;
+}
+
+/* Luxury Card Shadow */
+.luxury-shadow {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+}
+
+.luxury-glow {
+  box-shadow: 0 0 50px -10px rgba(201, 164, 92, 0.3);
+}
+

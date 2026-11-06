@@ -1,0 +1,16 @@
+{
+  "name": "VANTÉR — Maison de Parfum",
+  "short_name": "VANTÉR",
+  "description": "The Art of Invisible Elegance — Luxury Haute Parfumerie",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "icons": [
+    {
+      "src": "/logo/vanter-monogram.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
