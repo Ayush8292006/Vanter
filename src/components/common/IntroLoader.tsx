@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../../hooks/useIsMobile';
 
@@ -12,47 +12,92 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<'drawing' | 'filled' | 'wordmark' | 'finished'>('drawing');
 
+  // Guard so onComplete fires exactly once
+  const completedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const finishTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Stable onComplete — avoids parent re-render from restarting the effect
+  const onCompleteRef = useRef(onComplete);
   useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  const fireComplete = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    onCompleteRef.current();
+  }, []);
+
+  useEffect(() => {
+    // Reset on mount (in case of remount)
+    completedRef.current = false;
+    setProgress(0);
+    setPhase('drawing');
+
+    // Reduced-motion: skip almost instantly
     if (prefersReduced) {
-      const timer = setTimeout(() => {
-        onComplete();
-      }, 700);
-      return () => clearTimeout(timer);
+      const t = setTimeout(fireComplete, 700);
+      return () => clearTimeout(t);
     }
 
-    // Counter timer 0 -> 100
     const duration = isMobile ? 2200 : 3200;
     const intervalTime = 25;
     const steps = duration / intervalTime;
     let stepCount = 0;
 
-    const timer = setInterval(() => {
+    timerRef.current = setInterval(() => {
       stepCount++;
       const current = Math.min(100, Math.round((stepCount / steps) * 100));
       setProgress(current);
 
-      if (current >= 30 && phase === 'drawing') {
-        setPhase('filled');
-      }
-      if (current >= 55 && phase !== 'wordmark') {
-        setPhase('wordmark');
-      }
+      // Functional update — never read `phase` from closure
+      setPhase((prev) => {
+        if (prev === 'finished') return prev;
+        if (current >= 55) return 'wordmark';
+        if (current >= 30) return 'filled';
+        return prev;
+      });
+
       if (current >= 100) {
-        clearInterval(timer);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
         setPhase('finished');
-        setTimeout(() => {
-          onComplete();
-        }, 500);
+        finishTimeoutRef.current = setTimeout(fireComplete, 500);
       }
     }, intervalTime);
 
-    return () => clearInterval(timer);
-  }, [onComplete, prefersReduced, isMobile, phase]);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      if (finishTimeoutRef.current) {
+        clearTimeout(finishTimeoutRef.current);
+        finishTimeoutRef.current = null;
+      }
+    };
+    // ✅ only these 3 deps — NO `phase`, NO `onComplete`
+  }, [prefersReduced, isMobile, fireComplete]);
 
-  const handleSkip = () => {
+  const handleSkip = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (completedRef.current) return;
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (finishTimeoutRef.current) {
+      clearTimeout(finishTimeoutRef.current);
+      finishTimeoutRef.current = null;
+    }
+
     setProgress(100);
     setPhase('finished');
-    onComplete();
+    fireComplete();
   };
 
   const letters = ['V', 'A', 'N', 'T', 'É', 'R'];
@@ -64,7 +109,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-        onClick={handleSkip}
+        onClick={() => handleSkip()}
       >
         {/* Curtains / Exit panels */}
         <motion.div
@@ -90,10 +135,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
 
         {/* Skip Button */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleSkip();
-          }}
+          onClick={(e) => handleSkip(e)}
           className="absolute top-6 right-6 sm:top-8 sm:right-10 z-30 text-[10px] sm:text-xs uppercase tracking-[0.35em] text-taupe/60 hover:text-gold transition-colors duration-300 flex items-center gap-2 group cursor-pointer"
         >
           <span>Skip Intro</span>
@@ -119,7 +161,6 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
                 </linearGradient>
               </defs>
 
-              {/* Stroke Draw Paths */}
               <motion.path
                 d="M 45 60 L 95 60 L 150 225 L 150 245 L 138 245 L 45 60 Z"
                 stroke="#C9A45C"
@@ -170,7 +211,6 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
               />
             </svg>
 
-            {/* Light sheen sweeping across */}
             {progress > 45 && (
               <motion.div
                 className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none"
@@ -181,7 +221,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
             )}
           </div>
 
-          {/* Staggered Wordmark Reveal: V A N T É R */}
+          {/* Staggered Wordmark Reveal */}
           <div className="flex items-center justify-center space-x-3 sm:space-x-5 my-3 h-10 overflow-hidden">
             {letters.map((char, idx) => (
               <motion.span
@@ -195,7 +235,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
                 }
                 transition={{
                   duration: 0.6,
-                  delay: idx === 4 ? 0.35 : idx * 0.08, // Accent on É drops in last with distinct cadence!
+                  delay: idx === 4 ? 0.35 : idx * 0.08,
                   ease: [0.76, 0, 0.24, 1],
                 }}
               >
@@ -213,7 +253,7 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
             HAUTE PARFUMERIE • PARIS
           </motion.p>
 
-          {/* Expanding Gold Progress Bar */}
+          {/* Progress Bar */}
           <div className="w-48 sm:w-56 h-[1px] bg-sand/20 mt-8 relative overflow-hidden">
             <motion.div
               className="absolute left-0 top-0 bottom-0 bg-gold"
@@ -232,4 +272,3 @@ export const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete, isMobile =
     </AnimatePresence>
   );
 };
-
